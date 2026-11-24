@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday!</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+      body {
+        min-height: 100vh;
+        background: linear-gradient(
+            135deg,
+            #ffd9e8 0%,
+            #ffa6c9 40%,
+            #f272a5 75%,
+            #d6407f 100%
+          )
+          fixed;
+        overflow-x: hidden;
+        font-family: "Fredoka", system-ui, sans-serif;
+      }
+
+      /* falling flowers */
+      .flower {
+        position: fixed;
+        top: -90px;
+        z-index: 1;
+        pointer-events: none;
+        height: auto;
+        animation: drop linear infinite;
+        will-change: transform;
+      }
+      .bloom {
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        animation: spin 6s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes drop {
+        0% {
+          transform: translate(0, 0) rotate(-20deg);
+        }
+        25% {
+          transform: translate(35px, 30vh) rotate(15deg);
+        }
+        50% {
+          transform: translate(-25px, 60vh) rotate(-10deg);
+        }
+        75% {
+          transform: translate(30px, 90vh) rotate(20deg);
+        }
+        100% {
+          transform: translate(-10px, 125vh) rotate(-15deg);
+        }
+      }
+
+      h1 {
+        margin: 0;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-weight: 600;
+        font-size: clamp(1.8rem, 5vw, 3.4rem);
+        color: #fff;
+        text-shadow:
+          0 3px 0 rgba(180, 40, 100, 0.55),
+          0 8px 20px rgba(120, 20, 60, 0.35);
+        position: relative;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      /* envelopes */
+      .stage {
+        position: relative;
+        z-index: 3;
+        min-height: calc(100vh - 72px);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 6vh 6vw;
+        padding: 50px 5vw 70px;
+        box-sizing: border-box;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .env {
+        position: relative;
+        width: min(290px, 42vw);
+        aspect-ratio: 3/2;
+        border: 0;
+        padding: 0;
+        background: none;
+        cursor: pointer;
+        font: inherit;
+        transition: transform 0.25s ease;
+        filter: drop-shadow(0 12px 18px rgba(120, 20, 60, 0.3));
+      }
+      .env:nth-child(odd) {
+        transform: rotate(-4deg);
+      }
+      .env:nth-child(even) {
+        transform: rotate(4deg);
+      }
+      @media (max-width: 560px) {
+        .env {
+          width: 68vw;
+        }
+      }
+      .env:hover,
+      .env:focus-visible {
+        transform: rotate(0) scale(1.06);
+        outline: none;
+      }
+      .env span {
+        position: absolute;
+        display: block;
+      }
+      .env .back {
+        inset: 0;
+        background: #f06aa0;
+        border-radius: 8px;
+      }
+      .env .note {
+        left: 8%;
+        top: 6%;
+        width: 84%;
+        height: 82%;
+        background: #fffdf7;
+        border-radius: 4px;
+        z-index: 2;
+        transition: transform 0.6s ease;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 14px;
+        box-sizing: border-box;
+        color: #d6407f;
+        font-size: 1.1rem;
+      }
+      .env .front {
+        inset: 0;
+        background: #ff9cc3;
+        border-radius: 8px;
+        z-index: 3;
+        clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+      }
+      .env .tag {
+        left: 0;
+        right: 0;
+        bottom: 12%;
+        text-align: center;
+        z-index: 4;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.15rem;
+        text-shadow: 0 2px 0 rgba(180, 40, 100, 0.5);
+      }
+      .env .flap {
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 55%;
+        background: #ff7fb2;
+        z-index: 5;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        transform-origin: top;
+        transition:
+          transform 0.5s ease,
+          z-index 0s;
+      }
+      .env .seal {
+        left: 50%;
+        top: 55%;
+        width: 46px;
+        height: 46px;
+        margin: -23px 0 0 -23px;
+        border-radius: 50%;
+        background: #d6407f;
+        color: #fff;
+        z-index: 6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        box-shadow: 0 3px 0 rgba(120, 20, 60, 0.35);
+        transition: opacity 0.3s;
+      }
+      .env.open .flap {
+        transform: rotateX(180deg);
+        z-index: 1;
+        transition:
+          transform 0.5s ease,
+          z-index 0s 0.25s;
+      }
+      .env.open .seal {
+        opacity: 0;
+      }
+      .env.open .note {
+        transform: translateY(-52%);
+      }
+
+      .hint {
+        position: fixed;
+        left: 50%;
+        bottom: 10px;
+        transform: translateX(-50%);
+        font:
+          14px/1.3 "Fredoka",
+          system-ui,
+          sans-serif;
+        color: #fff;
+        background: rgba(120, 20, 70, 0.5);
+        padding: 6px 14px;
+        border-radius: 999px;
+        pointer-events: none;
+        z-index: 4;
+      }
+
+      /* welcome screen */
+      body.locked {
+        overflow: hidden;
+        height: 100vh;
+      }
+      h1,
+      .stage,
+      .hint {
+        transition: opacity 0.6s ease 0.15s;
+      }
+      body.locked h1,
+      body.locked .stage,
+      body.locked .hint {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .intro {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        box-sizing: border-box;
+        transition:
+          opacity 0.5s ease,
+          visibility 0.5s;
+      }
+      .intro.done {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .intro-card {
+        width: min(420px, 100%);
+        box-sizing: border-box;
+        padding: 34px 32px 30px;
+        background: #fff;
+        color: #4a1f35;
+        border-radius: 20px;
+        box-shadow: 0 24px 60px rgba(100, 10, 50, 0.4);
+        text-align: center;
+      }
+      .intro-card h2 {
+        margin: 0 0 6px;
+        font-weight: 600;
+        font-size: 1.9rem;
+        color: #d6407f;
+      }
+      .intro-card p.sub {
+        margin: 0 0 22px;
+        color: #7a4a62;
+      }
+      .intro-card label {
+        display: block;
+        text-align: left;
+        font-size: 0.95rem;
+        margin: 0 0 6px;
+      }
+      .intro-card input {
+        width: 100%;
+        box-sizing: border-box;
+        font: inherit;
+        font-size: 1.05rem;
+        color: #4a1f35;
+        padding: 11px 14px;
+        margin-bottom: 18px;
+        border: 2px solid #ffb3d1;
+        border-radius: 12px;
+        background: #fff;
+      }
+      .intro-card input:focus-visible {
+        outline: 3px solid #ffb3d1;
+        outline-offset: 1px;
+        border-color: #d6407f;
+      }
+      .intro-card button {
+        width: 100%;
+        font: inherit;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 12px 16px;
+        border: 0;
+        border-radius: 999px;
+        background: #d6407f;
+        color: #fff;
+      }
+      .intro-card button:hover {
+        background: #bf3270;
+      }
+      .intro-card .err {
+        min-height: 1.3em;
+        margin: -6px 0 10px;
+        font-size: 0.9rem;
+        color: #b3202f;
+        text-align: left;
+      }
+
+      /* letter */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        box-sizing: border-box;
+        background: rgba(110, 15, 60, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s;
+      }
+      .overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+      .paper {
+        position: relative;
+        width: min(560px, 100%);
+        max-height: 86vh;
+        overflow-y: auto;
+        box-sizing: border-box;
+        padding: 40px 40px 32px;
+        background: #fff;
+        color: #4a1f35;
+        border-radius: 4px;
+        box-shadow: 0 24px 60px rgba(100, 10, 50, 0.45);
+        transform: translateY(24px) rotate(-1.5deg) scale(0.96);
+        transition: transform 0.3s ease;
+      }
+      .overlay.open .paper {
+        transform: none;
+      }
+      .paper h2 {
+        margin: 0 0 18px;
+        font-weight: 600;
+        font-size: 1.6rem;
+        line-height: 1.2;
+      }
+      .paper .body {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        white-space: pre-line;
+        max-width: 60ch;
+      }
+      .paper .sign {
+        margin-top: 22px;
+        font-weight: 600;
+        white-space: pre-line;
+      }
+      .paper .actions {
+        margin-top: 26px;
+      }
+      .paper button.primary {
+        font: inherit;
+        font-size: 0.95rem;
+        cursor: pointer;
+        padding: 8px 18px;
+        border-radius: 999px;
+        border: 2px solid #d6407f;
+        background: #d6407f;
+        color: #fff;
+      }
+      .paper .x {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: pointer;
+        font-size: 1.6rem;
+        line-height: 1;
+        color: #a05a78;
+      }
+      .paper button:focus-visible {
+        outline: 3px solid #ffb3d1;
+        outline-offset: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .flower,
+        .bloom,
+        .paper,
+        .overlay,
+        .intro,
+        h1,
+        .stage,
+        .hint,
+        .env,
+        .env * {
+          animation: none;
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="locked">
+    <h1>Happy Birthday!</h1>
+
+    <main class="stage" id="stage">
+      <button class="env" type="button" data-i="0" aria-label="Open letter 1">
+        <span class="back"></span
+        ><span class="note">HAPPYYYY BIRTHDAYY, SEXBOMB NICOLEEEE!!!</span
+        ><span class="front"></span> <span class="tag">1</span
+        ><span class="flap"></span><span class="seal">♥</span>
+      </button>
+      <button class="env" type="button" data-i="1" aria-label="Open letter 2">
+        <span class="back"></span
+        ><span class="note">HAPPYYYY BIRTHDAYY, SEXBOMB NICOLEEEE!!!</span
+        ><span class="front"></span> <span class="tag">2</span
+        ><span class="flap"></span><span class="seal">♥</span>
+      </button>
+      <button class="env" type="button" data-i="2" aria-label="Open letter 3">
+        <span class="back"></span
+        ><span class="note">Happy Birthday, NICOLE!</span
+        ><span class="front"></span> <span class="tag">3</span
+        ><span class="flap"></span><span class="seal">♥</span>
+      </button>
+      <button class="env" type="button" data-i="3" aria-label="Open letter 4">
+        <span class="back"></span
+        ><span class="note">Haloo nikolaii Happy Birthday</span
+        ><span class="front"></span> <span class="tag">4</span
+        ><span class="flap"></span><span class="seal">♥</span>
+      </button>
+    </main>
+    <div class="hint">Click an envelope to read the letter</div>
+
+    <div class="intro" id="intro">
+      <form class="intro-card" id="introForm" novalidate>
+        <h2>Welcome!</h2>
+        <p class="sub">
+          Enter your name and date of birth to open your surprise.
+        </p>
+        <label for="nameInput">Your name</label>
+        <input
+          id="nameInput"
+          type="text"
+          maxlength="30"
+          autocomplete="given-name"
+          placeholder="Your name"
+          required
+        />
+        <label for="dobInput">Date of birth</label>
+        <input id="dobInput" type="date" autocomplete="bday" required />
+        <p class="err" id="introErr" role="alert"></p>
+        <button type="submit">Let's celebrate!</button>
+      </form>
+    </div>
+
+    <div class="overlay" id="overlay" aria-hidden="true">
+      <article
+        class="paper"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="letterTitle"
+      >
+        <button class="x" id="closeX" type="button" aria-label="Close letter">
+          &times;
+        </button>
+        <h2 id="letterTitle"></h2>
+        <div class="body" id="letterBody"></div>
+        <div class="sign" id="letterSign"></div>
+        <div class="actions">
+          <button class="primary" id="closeBtn" type="button">Close</button>
+        </div>
+      </article>
+    </div>
+
+    <script>
+      /* ---- Flowers ---- */
+      const PETALS = [
+        "#ffffff",
+        "#fff1c9",
+        "#ffd9c2",
+        "#e9d0ff",
+        "#b3306b",
+        "#ffe6f0",
+      ];
+      function flowerSVG(c) {
+        let p = "";
+        for (let a = 0; a < 360; a += 60)
+          p += `<ellipse cx="50" cy="27" rx="13" ry="21" fill="${c}" transform="rotate(${a} 50 50)"/>`;
+        return `<svg class="flower" viewBox="0 0 100 100"><g class="bloom">${p}<circle cx="50" cy="50" r="12" fill="#f9c74f"/><circle cx="46" cy="46" r="3.5" fill="#fff" opacity=".6"/></g></svg>`;
+      }
+      for (let i = 0; i < 16; i++) {
+        const w = document.createElement("div");
+        w.innerHTML = flowerSVG(PETALS[i % PETALS.length]);
+        const f = w.firstElementChild;
+        const s = 40 + Math.random() * 60;
+        f.style.cssText = `left:${Math.random() * 100}vw;width:${s}px;animation-duration:${9 + Math.random() * 10}s;animation-delay:${-Math.random() * 16}s;opacity:${0.85 + Math.random() * 0.15}`;
+        f.querySelector(".bloom").style.animationDuration =
+          (4 + Math.random() * 6).toFixed(1) + "s";
+        document.body.appendChild(f);
+      }
+
+      /* ---- Letters: one per envelope. Palitan mo ang title, text, at sign. ---- */
+      const LETTERS = [
+        {
+          title: "HAPPYYYY BIRTHDAYY, SEXBOMB NICOLEEEE!!!",
+          text: "Hala 19 ka na behz, gurang ka na! Choss! \nFirst, I wish you na sana maging happy ka today kasi it's your day! You deserve to own this day (ngayon lang ha, wag mong angkinin yung ibang araw #WagGahaman). Alam kong I probably wished you na even before pa na sana ma-achieve mo lahat ng pinapangarap mo, but I'm still going to keep wishing you those things. Alam ko kasing once na magawa at ma-achieve mo lahat ng gusto mo in this world, you'll be happy. I want you to be happy no matter what and how much it may cost. Wag mong iwawala yung sunshine personality mo ha 🥺. \n\nWish ko rin sayo bebe na sana kahit magkaroon ka ng mga struggles sa buhay, sana ma-overcome mo yun dahil you don't deserve to suffer. I also want to remind you na please, be gentle with yourself. Don't pressure yourself too hard. If ever nafe-feel mo na the world may seem harsh on you, don't always hesitate to run to us— we'll be right there until you finally get better again. \n\nI'm wishing you a good luck and guidance on everything journey you'll have. I know how brave you are and you'll eventually get to top someday! I love you, I REALLY REALLY LOVEE YOUU, MY NIKOLAII! HAPPYY BIRTHDAYY AGAINN, MY CINNAMON 🥺😞😘🫰🩷.",
+          sign: "Mariana",
+        },
+        {
+          title: "Happy Birthday Col!",
+          text: "I'm so grateful na nakilala kita and that our friendship continued even as we entered a new chapter in our lives. I'm really happy na hanggang ngayon, we still have each other :> \n\nThank you for being someone I can laugh with, share stories with, and create memories with. I'm so proud of how far we've come, and I hope you know how much you mean to me. I wish you nothing but happiness, success, and all the good things in life because you deserve nothing less. \n\nI know that as we grow older, things will change, we'll meet new people, and we'll have different priorities, but I hope we never lose the friendship we've built. Always remember na dito lang me pwede mong chikahin anytime. \n\nI love youu! Enjoy your day, col!",
+          sign: "liyah",
+        },
+        {
+          title: "Happy Birthday, NICOLE!",
+          text: "Hi, Col! Happy birthday so much to you! Actually, I don't really know what to say at this very moment even though I know that I have so much to tell. I love you so much! \n\nI'm very grateful that I have you in my life despite of not seeing each other that much since we graduated, we remain close and I'm very happy for that. I hope that it won't end kasi bakit mag-end?!?!? You're one of my bestest friend, alam mo yan (grebe nemen) \n\nAdd ko lang rin, alam kong sobrang stress ka sa amin ni Aliyah in terms of our lovelifes but I super appreciate you kasi nandyan ka pa rin for us. I am very sorry but also hank you so much, mwa! I hope maging maayos rin yung lovelife mo if ever na magkaroon ka na. \n\nSiguro mga ganiyan lang naiisip ko now pero I think alam mo na rin naman yan, hindi ko lang talaga maisip or ma-construct while doing this birthday letter of yours. I hope you enjoy and always be okay in every aspect. I hope magustuhan mo rin yung gift ko sayo kung meron man HWHAHAHAHAHAHA basta, ewan ko rin. Basta, mahal kita! \n\nSorry, parang ineeme eme ko na naman sinasabi ko pero totoo talaga yan, pramises! You know naman me, 'di ba? Laban na yan. Gala na tayo sa Antipolo or Bula— eme....",
+          sign: "Shy",
+        },
+        {
+          title: "Haloo nikolaii Happy Birthday",
+          text: "niiba ko na letter ko here, nisend ko yung luma kong letter duhh. uhhh hey bebe sorry i can't reach out kasi sa iba mong friends kaya hindi ko nalagay lahat, wala naman me contact rin dun ih :(. anyways, Thank you for being yourself, and for being there whenever I (or we your friends) needed you kumbaga laging kang available e noh. pero now ayus lang rin lahat naman kasi tayo busy sa college life natin. You might not always realize it, but your presence means a lot to us your friends. May this year bring you nothing but good health, and I hope makuha mo yung mga things na gusto mo. I will always support you kahit ano pang gawin mo jan HAHAHAHAH. and if my problem ka don't hesitate para mag sabi okayy, im always here kakampi tayo. kakampi ka na parang kalaban charot joke lang :p \n\nayun lang, nabasa mo naman original letter ko ih hehehehe love you babe, happy happy birthday sa bata nato",
+          sign: "Joyjoy :pp",
+        },
+      ];
+
+      const overlay = document.getElementById("overlay"),
+        letterTitle = document.getElementById("letterTitle"),
+        letterBody = document.getElementById("letterBody"),
+        letterSign = document.getElementById("letterSign"),
+        closeBtn = document.getElementById("closeBtn"),
+        closeX = document.getElementById("closeX");
+      let current = null;
+
+      document.querySelectorAll(".env").forEach((env) => {
+        env.addEventListener("click", () => {
+          if (env.classList.contains("open")) return;
+          current = env;
+          env.classList.add("open");
+          setTimeout(() => openLetter(+env.dataset.i), 750);
+        });
+      });
+      function openLetter(i) {
+        const L = LETTERS[i];
+        letterTitle.textContent = L.title;
+        letterBody.textContent = L.text;
+        letterSign.textContent = L.sign;
+        overlay.classList.add("open");
+        overlay.setAttribute("aria-hidden", "false");
+        closeBtn.focus();
+      }
+      function closeLetter() {
+        overlay.classList.remove("open");
+        overlay.setAttribute("aria-hidden", "true");
+        if (current) {
+          current.classList.remove("open");
+          current.focus();
+          current = null;
+        }
+      }
+      closeBtn.addEventListener("click", closeLetter);
+      closeX.addEventListener("click", closeLetter);
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeLetter();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && overlay.classList.contains("open"))
+          closeLetter();
+      });
+
+      /* ---- Welcome screen: only Nicole (25/11/2007) gets in ---- */
+      const ALLOWED_NAME = "Nicole",
+        ALLOWED_DOB = { y: 2007, m: 11, d: 25 };
+      const introForm = document.getElementById("introForm"),
+        intro = document.getElementById("intro"),
+        nameInput = document.getElementById("nameInput"),
+        dobInput = document.getElementById("dobInput"),
+        introErr = document.getElementById("introErr"),
+        titleEl = document.querySelector("h1");
+      nameInput.focus();
+      introForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = nameInput.value.trim();
+        const [y, m, d] = dobInput.value.split("-").map(Number);
+        if (!name) {
+          introErr.textContent = "Please enter your name.";
+          nameInput.focus();
+          return;
+        }
+        if (!y || !m || !d) {
+          introErr.textContent = "Please pick your date of birth.";
+          dobInput.focus();
+          return;
+        }
+        const ok =
+          name.toLowerCase() === ALLOWED_NAME.toLowerCase() &&
+          y === ALLOWED_DOB.y &&
+          m === ALLOWED_DOB.m &&
+          d === ALLOWED_DOB.d;
+        if (!ok) {
+          introErr.textContent =
+            "Sorry, this surprise is only for Nicole. Check the name and date of birth.";
+          return;
+        }
+        introErr.textContent = "";
+        titleEl.textContent = "Happy Birthday, " + ALLOWED_NAME + "!";
+        document.title = "Happy Birthday, " + ALLOWED_NAME + "!";
+        document.body.classList.remove("locked");
+        intro.classList.add("done");
+        intro.setAttribute("aria-hidden", "true");
+      });
+    </script>
+  </body>
+</html>
